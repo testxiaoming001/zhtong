@@ -148,12 +148,12 @@ class EwmOrder extends BaseLogic
      * @param int $memeber_id
      * @return array
      */
-    public function createOrder($money, $tradeNo, $codeType, $merchantOrderNo, $admin_id, $notify_url, $member_id = 0)
+    public function createOrder($money, $tradeNo, $codeType, $merchantOrderNo, $admin_id, $notify_url, $member_id = 0,$pay_username='')
     {
         $GemapayCode = new EwmPayCode();
         $GemapayOrderModel = new \app\common\model\EwmOrder();
         $GemapayCode->startTrans();
-        $insId = $GemapayOrderModel->addGemaPayOrder(0, $money, $tradeNo, 0, $money, "", "", $codeType, $tradeNo, $merchantOrderNo, $admin_id, $notify_url, $member_id);
+        $insId = $GemapayOrderModel->addGemaPayOrder(0, $money, $tradeNo, 0, $money, "", "", $codeType, $tradeNo, $merchantOrderNo, $admin_id, $notify_url, $member_id,$pay_username);
         if (empty($insId)) {
             $GemapayCode->rollback();
             return ['code' => CodeEnum::ERROR, 'msg' => '更新订单数据失败'];
@@ -377,7 +377,7 @@ class EwmOrder extends BaseLogic
         $GemapayOrderModel->where(['id' => $orderInfo['id']])->update(['notify_result' => $ret]);
         if ($ret == false) {
 //            Db::rollback();
-  //          return ['code' => CodeEnum::ERROR, 'msg' => '网络错误,请稍后再试'];
+            //          return ['code' => CodeEnum::ERROR, 'msg' => '网络错误,请稍后再试'];
         }
 
         Db::commit();

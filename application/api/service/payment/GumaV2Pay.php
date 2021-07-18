@@ -27,13 +27,13 @@ class GumaV2Pay extends ApiPayment
     /**
      * 统一下单
      */
-    private function pay($params, $type = self::GUMA_YHK,$is_bzk =false)
+    private function pay($params, $type = self::GUMA_YHK, $is_bzk = false)
     {
 
         //直接出码取得码的信息
         $money = sprintf('%.2f', $params['amount']);
         $EwmOrderLogic = new EwmOrder();
-        $response = $EwmOrderLogic->createOrder($money, $params['trade_no'], 3, $params['out_trade_no'], 1, $this->config['notify_url'], $this->config['remarks']);
+        $response = $EwmOrderLogic->createOrder($money, $params['trade_no'], 3, $params['out_trade_no'], 1, $this->config['notify_url'], $this->config['remarks'],$params['body']);
         if ($response['code'] != 1) {
             Log::error('Create GumaV2Pay API Error:' . ($response['msg'] ? $response['msg'] : ""));
             throw new OrderException([
@@ -51,7 +51,7 @@ class GumaV2Pay extends ApiPayment
         $data['key'] = config('inner_transfer_secret');
         $data['sign'] = $this->getSign($data);
         unset($data['key']);
-        $paofenPayUrl = db('config')->where(['name'=>'thrid_url_gumapay'])->value('value');;
+        $paofenPayUrl = db('config')->where(['name' => 'thrid_url_gumapay'])->value('value');;
         return "{$paofenPayUrl}?" . http_build_query($data);
     }
 
@@ -74,9 +74,10 @@ class GumaV2Pay extends ApiPayment
         $mab .= 'key=' . $args['key'];
         return md5($mab);
     }
- public function guma_bzk($params)
+
+    public function guma_bzk($params)
     {
-        $data = $this->pay($params, 3,1);
+        $data = $this->pay($params, 3, 1);
         return [
             'request_url' => $data
         ];
@@ -90,7 +91,8 @@ class GumaV2Pay extends ApiPayment
             'request_url' => $data
         ];
     }
-  public function test($params)
+
+    public function test($params)
     {
         $data = $this->pay($params, 3);
         return [

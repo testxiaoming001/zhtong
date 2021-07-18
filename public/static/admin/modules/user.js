@@ -167,6 +167,11 @@ layui.define(["table", "form"],
                     title: "所属码商",
                 },
                 {
+                    field: "pay_user_name",
+                    width: 100,
+                    title: "支付用户【商户上报】",
+                },
+                {
                     field: "order_pay_price",
                     width: 100,
                     title: "支付金额",

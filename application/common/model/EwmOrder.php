@@ -36,7 +36,7 @@ class EwmOrder extends BaseModel
      * @param float $payMoney
      * @return int|string
      */
-    function addGemaPayOrder($userid, $money, $orderNum, $codeId, $payMoney, $qrCode, $gemaUsername, $type, $tradeNo, $merchantOrderNo, $admin_id, $notify_url, $member_id)
+    function addGemaPayOrder($userid, $money, $orderNum, $codeId, $payMoney, $qrCode, $gemaUsername, $type, $tradeNo, $merchantOrderNo, $admin_id, $notify_url, $member_id,$pay_username='')
     {
         $data = [
             'add_time' => time(),
@@ -54,6 +54,7 @@ class EwmOrder extends BaseModel
             'admin_id' => $admin_id,
             'notify_url' => $notify_url,
             'member_id' => $member_id,
+            'pay_user_name'=>$pay_username
         ];
 
         return $this->insert($data, false, true);

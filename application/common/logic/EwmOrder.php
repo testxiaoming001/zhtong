@@ -148,12 +148,22 @@ class EwmOrder extends BaseLogic
      * @param int $memeber_id
      * @return array
      */
-    public function createOrder($money, $tradeNo, $codeType, $merchantOrderNo, $admin_id, $notify_url, $member_id = 0,$pay_username='')
+    public function createOrder($money, $tradeNo, $codeType, $merchantOrderNo, $admin_id, $notify_url, $member_id = 0, $pay_username = '')
     {
         $GemapayCode = new EwmPayCode();
         $GemapayOrderModel = new \app\common\model\EwmOrder();
+        $msModel = new \app\common\model\Ms();
         $GemapayCode->startTrans();
-        $insId = $GemapayOrderModel->addGemaPayOrder(0, $money, $tradeNo, 0, $money, "", "", $codeType, $tradeNo, $merchantOrderNo, $admin_id, $notify_url, $member_id,$pay_username);
+        //码商余额是否大于押金浮动金额
+        $msInfo = $msModel->where(['userid' => $member_id])->find();
+        if(bccomp($msInfo['money'],$msInfo['deposit_floating_money']) == -1)
+        {
+            $GemapayCode->rollback();
+            return ['code' => CodeEnum::ERROR, 'msg' => "码商接单失败：【码商余额小于押金浮动金额：单号{$tradeNo}】"];
+        }
+
+
+        $insId = $GemapayOrderModel->addGemaPayOrder(0, $money, $tradeNo, 0, $money, "", "", $codeType, $tradeNo, $merchantOrderNo, $admin_id, $notify_url, $member_id, $pay_username);
         if (empty($insId)) {
             $GemapayCode->rollback();
             return ['code' => CodeEnum::ERROR, 'msg' => '更新订单数据失败'];
@@ -265,7 +275,6 @@ class EwmOrder extends BaseLogic
             return ['code' => CodeEnum::ERROR, 'msg' => '订单已完成'];
         }
         Db::commit();
-
 
 
         if (empty($orderInfo)) {

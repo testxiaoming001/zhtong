@@ -1363,6 +1363,13 @@ layui.define(["table", "form"],
                     title: "余额"
                 },
                 {
+                    field: "deposit_floating_money",
+                    width: 200,
+                    title: "押金浮动金额"
+                },
+
+
+                {
                     field: "bank_rate",
                     width: 180,
                     title: "跑卡佣金费率",

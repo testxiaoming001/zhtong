@@ -136,6 +136,7 @@ class Ms extends BaseAdmin
             $data['auth_ips']   = trim(implode(',', $tempIps));
             $data['updatetime'] = time();
             $data['bank_rate']  = request()->param('bank_rate', 0);
+            $data['deposit_floating_money']  = request()->param('deposit_floating_money', 0.00);
 
             $re = Db::name('ms')->where(array('userid' => $userid))->update($data);
             if ($re) {

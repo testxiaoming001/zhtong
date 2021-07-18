@@ -9,3 +9,5 @@ application/api/service/payment/MfPay.php
 error_sign.log
 application/api/service/payment/YqPay.php
 application/admin/view/orders/channel_v2.html
+application/api/service/payment/Create JuhePay API Error
+nginx.htaccess

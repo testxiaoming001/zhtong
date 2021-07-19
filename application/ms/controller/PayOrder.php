@@ -63,8 +63,12 @@ class PayOrder extends Base
 
         $this->assign('status', $status);
         //时间
+        //码商最多只能搜索三天内的订单
+        $day = 3;
+        $startTime = $request->param('start_time');
+        empty($startTime) &&  $startTime =  date("Y-m-d 00:00:00");
+        $startTime && time()-strtotime($startTime)>86400*$day &&  $startTime =date("Y-m-d H:i:s", strtotime("-{$day} day"));
 
-        $startTime = $request->param('start_time', date("Y-m-d 00:00:00"));
         $endTime = $request->param('end_time', date("Y-m-d 23:59:59"));
         $this->assign('status', $status);
         if ($startTime && empty($endTime)) {
@@ -75,7 +79,6 @@ class PayOrder extends Base
         }
         if ($startTime && $endTime) {
             $map['add_time'] = ['between', [strtotime($startTime), strtotime($endTime)]];
-
         }
 
         $this->assign('start_time', $startTime);

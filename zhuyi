@@ -67,3 +67,7 @@ cd /etc
 vim bash.bashrc
 export LC_ALL='zh_CN.UTF-8'
 source bash.bashrc
+
+
+
+

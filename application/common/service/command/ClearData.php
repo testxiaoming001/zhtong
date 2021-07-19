@@ -43,36 +43,39 @@ class ClearData extends Command
 
     /**
      *
-     * @author 勇敢的小笨羊 <brianwaring98@gmail.com>
-     *
      * @param Input $input
      * @param Output $output
      * @return int|null|void
+     * @author 勇敢的小笨羊 <brianwaring98@gmail.com>
+     *
      */
     protected function execute(Input $input, Output $output)
     {
-
-
         // 输出到日志文件
         $output->writeln("clear data  start");
         // 定时器需要执行的内容
 
-        try{
+        try {
             //删除七天前的数据
-            $where['create_time'] = ['lt',time()-86400*10];
-            $tables = ['action_log','balance_change','balance_cash','orders','orders_notify'];
-            foreach ($tables as $k=>$v)
-            {
+            $where['create_time'] = ['lt', time() - 86400 * 10];
+            $tables = ['action_log', 'balance_change', 'balance_cash', 'orders', 'orders_notify'];
+            foreach ($tables as $k => $v) {
                 //order表保留7天的数据
-                if($v == 'orders'){
-                    db($v)->where(['create_time'=>['lt',time()-86400*10]])->delete();
-                }else {
+                if ($v == 'orders') {
+                    db($v)->where(['create_time' => ['lt', time() - 86400 * 10]])->delete();
+                } else {
                     db($v)->where($where)->delete();
                 }
             }
-        }catch (\Exception $e){
+            //删除码商相关的数据
+            //①码商订单
+            db('ewm_order')->where(['add_time' => ['lt', time() - 86400 * 7]])->delete();
+            //②码商流水
+            db('ms_somebill')->where(['addtime' => ['lt', time() - 86400 * 7]])->delete();
+
+        } catch (\Exception $e) {
             $output->writeln($e->getMessage());
-            Log::error("clear data Fail:[".$e->getMessage()."]");
+            Log::error("clear data Fail:[" . $e->getMessage() . "]");
         }
         // .....
         $output->writeln("clear data  end....");

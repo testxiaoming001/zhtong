@@ -615,4 +615,11 @@ ADD COLUMN `pay_user_name` varchar(20) NOT NULL COMMENT '商户上报的支付�
 
 -------码商押金浮动金额
 ALTER TABLE `www_zf_com`.`cm_ms`
-ADD COLUMN `deposit_floating_monry` decimal(8, 2) NOT NULL COMMENT '码商押金浮动金额' AFTER `is_open_mch_paycodes`
+ADD COLUMN `deposit_floating_money` decimal(8, 2) NOT NULL COMMENT '码商押金浮动金额' AFTER `is_open_mch_paycodes`
+
+
+
+
+
+
+

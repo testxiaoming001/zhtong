@@ -134,7 +134,8 @@ class PayCode extends Base
         }
         $re = $this->modelEwmPayCode
             ->where('id', $id)
-            ->update(['is_delete' => 1]);
+            ->delete();
+
 
         if ($re) {
             $QueueLogic = new Queuev1Logic();

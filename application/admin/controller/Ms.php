@@ -53,15 +53,15 @@ class Ms extends BaseAdmin
 
         $this->result($data || !empty($data) ?
             [
-                'code'  => CodeEnum::SUCCESS,
-                'msg'   => '',
+                'code' => CodeEnum::SUCCESS,
+                'msg' => '',
                 'count' => $count,
-                'data'  => $data
+                'data' => $data
             ] : [
-                'code'  => CodeEnum::ERROR,
-                'msg'   => '暂无数据',
+                'code' => CodeEnum::ERROR,
+                'msg' => '暂无数据',
                 'count' => $count,
-                'data'  => $data
+                'data' => $data
             ]);
     }
 
@@ -99,9 +99,9 @@ class Ms extends BaseAdmin
         }
         if ($request->isPost()) {
             $data['username'] = trim($request->param('username'));
-            $data['mobile']   = trim($request->param('mobile'));
-            $login_pwd        = trim($request->param('login_pwd', ''));
-            $relogin_pwd      = trim($request->param('relogin_pwd', ''));
+            $data['mobile'] = trim($request->param('mobile'));
+            $login_pwd = trim($request->param('login_pwd', ''));
+            $relogin_pwd = trim($request->param('relogin_pwd', ''));
             if ($login_pwd && $login_pwd != $relogin_pwd) {
                 $this->error('修改密码时,两次密码不一致');
             }
@@ -121,7 +121,7 @@ class Ms extends BaseAdmin
 
             $auth_ips = $this->request->param('auth_ips');
             $auth_ips = array_filter(explode("\r\n", $auth_ips));
-            $tempIps  = [];
+            $tempIps = [];
             foreach ($auth_ips as $ip) {
                 $ip = trim($ip);
                 if (empty($ip)) {
@@ -133,10 +133,10 @@ class Ms extends BaseAdmin
                 }
                 $tempIps[] = $ip;
             }
-            $data['auth_ips']   = trim(implode(',', $tempIps));
+            $data['auth_ips'] = trim(implode(',', $tempIps));
             $data['updatetime'] = time();
-            $data['bank_rate']  = request()->param('bank_rate', 0);
-            $data['deposit_floating_money']  = request()->param('deposit_floating_money', 0.00);
+            $data['bank_rate'] = request()->param('bank_rate', 0);
+            $data['deposit_floating_money'] = request()->param('deposit_floating_money', 0.00);
 
             $re = Db::name('ms')->where(array('userid' => $userid))->update($data);
             if ($re) {
@@ -194,11 +194,11 @@ class Ms extends BaseAdmin
         !empty($this->request->param('account_name')) && $where['b.account_name']
             = ['eq', $this->request->param('account_name')];
 
-       !empty($this->request->param('pay_username')) && $where['pay_username']
+        !empty($this->request->param('pay_username')) && $where['pay_username']
             = ['eq', $this->request->param('pay_username')];
 
         $fields = ['a.*', 'b.account_name', 'b.bank_name', 'account_number', 'c.username'];
-        $data   = $this->logicEwmOrder->getOrderList($where, $fields, 'add_time desc', false);
+        $data = $this->logicEwmOrder->getOrderList($where, $fields, 'add_time desc', false);
 
         !empty($this->request->param('pay_username')) && $where['pay_username']
             = ['eq', $this->request->param('pay_username')];
@@ -207,15 +207,15 @@ class Ms extends BaseAdmin
         $count = $this->logicEwmOrder->getOrdersCount($where);
         $this->result($data || !empty($data) ?
             [
-                'code'  => CodeEnum::SUCCESS,
-                'msg'   => '',
+                'code' => CodeEnum::SUCCESS,
+                'msg' => '',
                 'count' => $count,
-                'data'  => $data,
+                'data' => $data,
             ] : [
-                'code'  => CodeEnum::ERROR,
-                'msg'   => '暂无数据',
+                'code' => CodeEnum::ERROR,
+                'msg' => '暂无数据',
                 'count' => $count,
-                'data'  => $data
+                'data' => $data
             ]
         );
     }
@@ -227,10 +227,10 @@ class Ms extends BaseAdmin
      */
     public function issueOrder(Request $request)
     {
-        $orderId   = $this->request->post('id');
-        $coerce    = $this->request->post('coerce');//是否强制补单
+        $orderId = $this->request->post('id');
+        $coerce = $this->request->post('coerce');//是否强制补单
         $GemaOrder = new \app\common\logic\EwmOrder();
-        $res       = $GemaOrder->setOrderSucessByAdmin($orderId, $coerce);
+        $res = $GemaOrder->setOrderSucessByAdmin($orderId, $coerce);
         if ($res['code'] == CodeEnum::ERROR) {
             $this->error($res['msg']);
         }
@@ -259,7 +259,7 @@ class Ms extends BaseAdmin
     {
         //时间搜索  时间戳搜素
         $map['addtime'] = $this->parseRequestDate3();
-        $billType       = $request->param('bill_type', 0, 'intval');
+        $billType = $request->param('bill_type', 0, 'intval');
         $billType && $map['jl_class'] = $billType;
         $username = $request->param('username', '', 'trim');
         $username && $map ['b.username'] = $username;
@@ -271,7 +271,7 @@ class Ms extends BaseAdmin
 
 
         $fields = ['a.*', 'b.username'];
-        $data   = $this->logicMsSomeBill->getBillsList($map, $fields, 'addtime desc', false);
+        $data = $this->logicMsSomeBill->getBillsList($map, $fields, 'addtime desc', false);
         if ($data) {
             $types = MsMoneyType::getMoneyOrderTypes();
             foreach ($data as $k => $v) {
@@ -283,15 +283,15 @@ class Ms extends BaseAdmin
         $count = $this->logicMsSomeBill->getBillsCount($map);
         $this->result($data || !empty($data) ?
             [
-                'code'  => CodeEnum::SUCCESS,
-                'msg'   => '',
+                'code' => CodeEnum::SUCCESS,
+                'msg' => '',
                 'count' => $count,
-                'data'  => $data,
+                'data' => $data,
             ] : [
-                'code'  => CodeEnum::ERROR,
-                'msg'   => '暂无数据',
+                'code' => CodeEnum::ERROR,
+                'msg' => '暂无数据',
                 'count' => $count,
-                'data'  => $data
+                'data' => $data
             ]
         );
 
@@ -304,7 +304,7 @@ class Ms extends BaseAdmin
     public function changeBalance(Request $request)
     {
         $userId = $request->param('userid');
-        $user   = Db::name('ms')->where(['userid' => $userId])->find();
+        $user = Db::name('ms')->where(['userid' => $userId])->find();
         if (!$user) {
             $this->error('会员不存在');
         }
@@ -347,12 +347,12 @@ class Ms extends BaseAdmin
     public function changeWhiteIp(Request $request)
     {
         $userId = $request->param('ms_id');
-        $user   = Db::name('ms')->where(['userid' => $userId])->find();
+        $user = Db::name('ms')->where(['userid' => $userId])->find();
         if (!$user) {
             $this->error('码商不存在');
         }
-        $aesKey    = config('aes_key', 'kqwwFRmKyloO');
-        $aes       = new CryptAes($aesKey);
+        $aesKey = config('aes_key', 'kqwwFRmKyloO');
+        $aes = new CryptAes($aesKey);
         $msWhiteIp = new MsWhiteIp;
 
         if ($request->isPost()) {
@@ -363,13 +363,13 @@ class Ms extends BaseAdmin
                 //新增新的
                 $ips = $request->post('ips', '', 'trim');
                 if ($ips) {
-                    $ips   = array_unique(array_filter(explode(PHP_EOL, $ips)));
+                    $ips = array_unique(array_filter(explode(PHP_EOL, $ips)));
                     $ipArr = [];
                     foreach ($ips as $ip) {
                         if (!filter_var($ip, FILTER_VALIDATE_IP)) {
                             throw  new \Exception("{$ip}输入不合法");
                         }
-                        $row['ms_id']      = $userId;
+                        $row['ms_id'] = $userId;
                         $row['encrypt_ip'] = $aes->encrypt($ip);
                         array_push($ipArr, $row);
                     }
@@ -382,9 +382,9 @@ class Ms extends BaseAdmin
             }
             $this->success('操作成功', url('index'));
         }
-        $ips = $msWhiteIp->where('ms_id',$userId)->column('encrypt_ip');
-        $ips =  array_map([$aes,'decrypt'],$ips);
-        $this->assign('ips',$ips);
+        $ips = $msWhiteIp->where('ms_id', $userId)->column('encrypt_ip');
+        $ips = array_map([$aes, 'decrypt'], $ips);
+        $this->assign('ips', $ips);
         return $this->fetch();
 
     }
@@ -408,13 +408,13 @@ class Ms extends BaseAdmin
      */
     public function delPayCode(Request $request)
     {
-        $id               = trim($request->param('id'));
+        $id = trim($request->param('id'));
         $GemapayCodeModel = new EwmPayCode();
-        $codeInfo         = $GemapayCodeModel->find($id);
+        $codeInfo = $GemapayCodeModel->find($id);
 
         $re = Db::name('ewm_pay_code')
             ->where('id', $id)
-            ->update(['is_delete' => 1]);
+            ->delete();
 
         if ($re) {
             //从队列中删除此二维码
@@ -433,7 +433,7 @@ class Ms extends BaseAdmin
      */
     public function getPaycodesLists(Request $request)
     {
-        $map          = [];
+        $map = [];
         $account_name = $request->param('account_name', 0, 'intval');
         $account_name && $map['a.account_name'] = ['like', '%' . $account_name . '%'];
         $map['a.is_delete'] = 0;
@@ -445,20 +445,20 @@ class Ms extends BaseAdmin
             $map['b.username'] = $username;
         }
         $fields = ['a.*', 'b.username'];
-        $data   = $this->logicEwmPayCodes->getCodeList($map, $fields, 'id desc', false);
+        $data = $this->logicEwmPayCodes->getCodeList($map, $fields, 'id desc', false);
 
         $count = $this->logicEwmPayCodes->getCodeCount($map);
         $this->result($data || !empty($data) ?
             [
-                'code'  => CodeEnum::SUCCESS,
-                'msg'   => '',
+                'code' => CodeEnum::SUCCESS,
+                'msg' => '',
                 'count' => $count,
-                'data'  => $data,
+                'data' => $data,
             ] : [
-                'code'  => CodeEnum::ERROR,
-                'msg'   => '暂无数据',
+                'code' => CodeEnum::ERROR,
+                'msg' => '暂无数据',
                 'count' => $count,
-                'data'  => $data
+                'data' => $data
             ]
         );
     }

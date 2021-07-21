@@ -156,13 +156,11 @@ class EwmOrder extends BaseLogic
         $GemapayCode->startTrans();
         //码商余额是否大于押金浮动金额
         $msInfo = $msModel->where(['userid' => $member_id])->find();
-        if(bccomp($msInfo['money'],$msInfo['deposit_floating_money']) == -1)
-        {
+        $msMaxOrderMoney = bcsub($msInfo['money'], $msInfo['deposit_floating_money'], 2);
+        if (bccomp($money, $msMaxOrderMoney) == 1) {
             $GemapayCode->rollback();
-            return ['code' => CodeEnum::ERROR, 'msg' => "码商接单失败：【码商余额小于押金浮动金额：单号{$tradeNo}】"];
+            return ['code' => CodeEnum::ERROR, 'msg' => "码商接单失败：【订单金额过大,最大订单金额{$msMaxOrderMoney}：单号{$tradeNo}】"];
         }
-
-
         $insId = $GemapayOrderModel->addGemaPayOrder(0, $money, $tradeNo, 0, $money, "", "", $codeType, $tradeNo, $merchantOrderNo, $admin_id, $notify_url, $member_id, $pay_username);
         if (empty($insId)) {
             $GemapayCode->rollback();
@@ -382,6 +380,7 @@ class EwmOrder extends BaseLogic
 
         $postData['out_trade_no'] = $orderInfo['order_no'];
         $ret = httpRequest($orderInfo['notify_url'], 'post', $postData);
+        \think\Log::info("码商确认收款通知支付系统单号：" . $orderInfo['order_no'] . "返回" . $ret);
         $GemapayOrderModel = new \app\common\model\EwmOrder();
         $GemapayOrderModel->where(['id' => $orderInfo['id']])->update(['notify_result' => $ret]);
         if ($ret == false) {

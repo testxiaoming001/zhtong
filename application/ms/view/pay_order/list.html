@@ -95,7 +95,7 @@
                                     <!-- <th>转款凭证</th>-->
                                     <th>下单时间</th>
                                     <th>支付时间</th>
-                                    <th>付款人姓名</th>
+<!--                                    <th>付款人姓名</th>-->
                                     <th>真实姓名</th>
                                     <!--<th>是否返还</th>-->
                                     <!--<th>订单备注</th>-->
@@ -149,19 +149,15 @@
                                     <!--<td> <img onclick="openpic('{php} {/php}','600','650')" src="{php} echo $data.credentials;{php/}" style="width:30%"/></td>-->
                                     <td>{php} echo date('Y-m-d H:i:s',$data['add_time']);{/php}</td>
                                     <td>{php} if($data['pay_time']){ echo date('Y-m-d H:i:s',$data['pay_time']);}else{echo '---';}{/php}</td>
+<!--                                    <td>-->
+<!--                                        {if condition="$data['pay_username']"}-->
+<!--                                        {$data['pay_username']}-->
+<!--                                        {else/}-->
+<!--                                        -&#45;&#45;-->
+<!--                                        {/if}-->
+<!--                                    </td>-->
                                     <td>
-                                        {if condition="$data['pay_username']"}
-                                        {$data['pay_username']}
-                                        {else/}
-                                        ---
-                                        {/if}
-                                    </td>
-                                    <td>
-                                        {if condition="$data['pay_user_name']"}
-                                        {$data['pay_user_name']}
-                                        {else/}
-                                        ---
-                                        {/if}
+                                        {$data.real_name|default='----'}
                                     </td>
 
                                     <!--<td>-->

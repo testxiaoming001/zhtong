@@ -158,6 +158,9 @@ class PayOrder extends Base
 
             $list[$key]['strArea'] = '无';
             $list[$key]['group_name'] = '无';
+            //用户真实姓名
+            $list[$key]['real_name'] = ctype_alnum($vals['pay_user_name'])?$vals['pay_username']:$vals['pay_user_name'];
+
         }
         $this->assign('count', $count);
         $this->assign('list', $list); // 賦值數據集

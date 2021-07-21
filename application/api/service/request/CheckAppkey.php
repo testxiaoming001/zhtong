@@ -65,13 +65,14 @@ class CheckAppkey extends ApiCheck
                 'errorCode' => 400003
             ]);
         }
-
-        //对接的渠道是 guma_yhk 或者 guma_bzk 必传支付用户名
-        if (in_array($channel, self::$bankPayCodes) && empty($request->param('body', ''))) {
-            throw new ParameterException([
-                'msg' => 'Invalid Request When Payment Code in' . json_encode(self::$bankPayCodes) . 'And The Param body Can Not Be empty',
-                'errorCode' => 400003
-            ]);
+        if (strtolower($request->action() != 'query')) {
+            //对接的渠道是 guma_yhk 或者 guma_bzk 必传支付用户名
+            if (in_array($channel, self::$bankPayCodes) && empty($request->param('body', ''))) {
+                throw new ParameterException([
+                    'msg' => 'Invalid Request When Payment Code in' . json_encode(self::$bankPayCodes) . 'And The Param body Can Not Be empty',
+                    'errorCode' => 400003
+                ]);
+            }
         }
 
 

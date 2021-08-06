@@ -94,7 +94,7 @@ class TgLogic extends BaseLogic
      * @param array $option
      * @return mixed
      */
-    protected function sendPhoto($chat_id, $photo, $option = [])
+    public function sendPhoto($chat_id, $photo, $option = [])
     {
         $url = 'https://api.telegram.org/bot' . $this->tgToken . '/sendPhoto';
         $data = [

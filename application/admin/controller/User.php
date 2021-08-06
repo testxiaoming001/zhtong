@@ -19,6 +19,7 @@ use app\common\library\enum\UserStatusEnum;
 use app\common\logic\TgLogic;
 use app\common\model\UserPayCode;
 use app\common\model\UserPayCodeAppoint;
+use think\helper\Str;
 
 class User extends BaseAdmin
 {
@@ -617,19 +618,38 @@ class User extends BaseAdmin
     public function sendTgMessage()
     {
         set_time_limit(0);
-//        $uids = $this->request->param('uids/a');
-
         $content = $this->request->param('content');
-//        $map['uid'] = ['in', $uids];
-        $users = $this->logicUser->getUserList([], 'tg_group_id', '', false);
+        $img = $this->request->param('img');
+        $uids = $this->request->param('uids');
+        $uidsArr = explode(',', $uids);
+        if (empty($img)) {
+            $this->error('推送图片必传');
+        }
+        $map = [];
+        $uids && $map['uid'] = ['in', $uidsArr];
+        $users = $this->logicUser->getUserList($map, 'tg_group_id', '', false);
         $tgGroupIds = array_filter(array_column(collection($users)->toArray(), 'tg_group_id'));
         //群发消息
         $tgLogic = new TgLogic();
         if ($tgGroupIds) {
             foreach ($tgGroupIds as $tgGroupId) {
-                $tgLogic->sendMessageTogroup($content, $tgGroupId);
+                $serverImg = request()->domain() . $img;
+                $serverImg = "https://www.layui.com/layuiadmin/pro/dist/style/res/template/portrait.png";
+                $option = $content ? ['caption' => $content] : [];
+                $tgLogic->sendPhoto($tgGroupId, $serverImg, $option);
             }
         }
+        $this->success('推送成功');
     }
+
+
+    /**
+     * 给商户推送的页面
+     */
+    public function addPushs()
+    {
+        return $this->fetch();
+    }
+
 
 }

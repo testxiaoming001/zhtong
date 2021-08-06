@@ -622,8 +622,8 @@ class User extends BaseAdmin
         $img = $this->request->param('img');
         $uids = $this->request->param('uids');
         $uidsArr = explode(',', $uids);
-        if (empty($img)) {
-            $this->error('推送图片必传');
+        if (empty($img) && empty($content)) {
+            $this->error('图片和文本必传其一');
         }
         $map = [];
         $uids && $map['uid'] = ['in', $uidsArr];
@@ -634,9 +634,14 @@ class User extends BaseAdmin
         if ($tgGroupIds) {
             foreach ($tgGroupIds as $tgGroupId) {
                 $serverImg = request()->domain() . $img;
-                $serverImg = "https://www.layui.com/layuiadmin/pro/dist/style/res/template/portrait.png";
+                // $serverImg = "https://www.layui.com/layuiadmin/pro/dist/style/res/template/portrait.png";
                 $option = $content ? ['caption' => $content] : [];
-                $tgLogic->sendPhoto($tgGroupId, $serverImg, $option);
+                if ($img) {
+                    $tgLogic->sendPhoto($tgGroupId, $serverImg, $option);
+                } else {
+                    $tgLogic->sendMessageTogroup($content, $tgGroupId);
+                }
+
             }
         }
         $this->success('推送成功');

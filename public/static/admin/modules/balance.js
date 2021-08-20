@@ -277,20 +277,40 @@ layui.define(["table", "form"],
                         style: "color:red"
                     },
                     {
-                        field: "method",
+                        field: "type",
                         width: 120,
-                        title: "交易方式"
+                        title: "提款方式",
+                        templet:function (d) {
+                            return d.type?'USDT':'银行卡';
+                        }
                     },
-                    {
-                        field: "account_name",
-                        width: 200,
-                        title: "收款姓名"
-                    },
+
                     {
                         field: "account",
-                        width: 200,
-                        title: "收款账号"
+                        width: 120,
+                        title: "提款详情",
+                        templet:function (d) {
+                            return d.type?d.withdraw_usdt_address:d.method+' '+d.account_name+' '+d.account;
+                        }
                     },
+
+
+                    //
+                    // {
+                    //     field: "method",
+                    //     width: 120,
+                    //     title: "交易方式"
+                    // },
+                    // {
+                    //     field: "account_name",
+                    //     width: 200,
+                    //     title: "收款姓名"
+                    // },
+                    // {
+                    //     field: "account",
+                    //     width: 200,
+                    //     title: "收款账号"
+                    // },
                     {
                         field: "status",
                         title: "订单状态",

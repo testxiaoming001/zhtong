@@ -106,5 +106,8 @@ return [
     'paofen_super_admin_id' => 1,
     'inner_transfer_secret' => 'g8CZvkqwwFRmKyloOAc2hLAZgZg8Ahcz',//内部应用通讯密钥
     'default_filter' => 'htmlspecialchars,addslashes,strip_tags',
+    //新版匹配码商银行卡
+    'new_version_forcode'=>true,
+    'bank_pay_url'=>'http://www.bank.com/v2/index.php'
 
 ];

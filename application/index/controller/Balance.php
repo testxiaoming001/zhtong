@@ -231,6 +231,12 @@ class Balance extends Base
         //收款账户
         $withdraw_fee = $this->logicConfig->getConfigInfo(['name' => 'withdraw_fee'], 'value');
         $this->assign('fee', $withdraw_fee['value']);
+
+        //usdt手续费
+        $usdt_rate = $this->logicConfig->getConfigInfo(['name' => 'withdraw_usdt_rate'], 'value');
+        $this->assign('usdt_rate', $usdt_rate['value']);
+
+
         $this->assign('list', $this->logicUserAccount->getAccountList(['a.uid' => is_login(), 'a.status' => 1], 'a.*,b.id as b_id,b.name as banker', 'a.create_time desc'));
         $secret = $ga->createSecret();
         session('google_secret', $secret);
@@ -296,8 +302,8 @@ class Balance extends Base
         }
 
         //指定时间段的统计start
-        $successCount = $this->modelDepositeOrders->alias('a')->where($where)->where(['status'=>1])->count();
-        $successMoney = $this->modelDepositeOrders->alias('a')->where($where)->where(['status'=>1])->sum('amount');
+        $successCount = $this->modelDepositeOrders->alias('a')->where($where)->where(['status' => 1])->count();
+        $successMoney = $this->modelDepositeOrders->alias('a')->where($where)->where(['status' => 1])->sum('amount');
         $this->assign('successCount', $successCount);
         $this->assign('successMoney', $successMoney);
         //指定时间段的统计end

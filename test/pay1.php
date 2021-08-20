@@ -13,7 +13,7 @@ if(!empty($_GET['amount']))
 		'notify_url' => $host.'/test/notify.php',
 		'return_url' => $host.'/test/return.php',
 		'time_stamp' => date("Ymdhis"),
-		'body' => 'dd',
+		'body' => "addH",
 	);
 	ksort($data);
     $signData = "";

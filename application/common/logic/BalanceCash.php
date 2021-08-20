@@ -211,58 +211,40 @@ class BalanceCash extends BaseLogic
      *
      * @return array
      */
-    public function saveUserCashApply($data)
-    {
+    public function saveUserCashApply($data){
         //TODO 数据验证
         $validate = $this->validateBalance->check($data);
 
         if (!$validate) {
             return ['code' => CodeEnum::ERROR, 'msg' => $this->validateBalance->getError()];
         }
-
-        $type = $data['type'];
-        if ($type == 1 && empty($data['withdraw_usdt_address'])) {
-            return ['code' => CodeEnum::ERROR, 'msg' => 'usdt提款请输入提款地址'];
-        }
-
-        if ($type == 0) {
-            //校检
-            $balance_cash_type = $this->logicConfig->getConfigInfo(['name' => 'balance_cash_type'], 'value')['value'];
-            if ($balance_cash_type == 1) {
-                if (!$data['account']) {
-                    return ['code' => CodeEnum::ERROR, 'msg' => '请选择收款账号'];
-                }
-            } else {
-                if (!$data['bank_name'] || !$data['bank_number'] || !$data['bank_realname']) {
-                    return ['code' => CodeEnum::ERROR, 'msg' => '请填写收款账号'];
-                }
+        //校检
+        $balance_cash_type  =  $this->logicConfig->getConfigInfo(['name'=>'balance_cash_type'],'value')['value'];
+        if($balance_cash_type == 1 ){
+            if(!$data['account']){
+                return ['code' => CodeEnum::ERROR, 'msg' => '请选择收款账号'];
+            }
+        }else{
+            if(!$data['bank_name'] || !$data['bank_number'] || !$data['bank_realname'] ){
+                return ['code' => CodeEnum::ERROR, 'msg' => '请填写收款账号'];
             }
         }
-
         //读取配置
-        $max_withdraw_limit = $this->logicConfig->getConfigInfo(['name' => 'max_withdraw_limit'], 'value');
-        $min_withdraw_limit = $this->logicConfig->getConfigInfo(['name' => 'min_withdraw_limit'], 'value');
+        $max_withdraw_limit  =  $this->logicConfig->getConfigInfo(['name'=>'max_withdraw_limit'],'value');
+        $min_withdraw_limit  =  $this->logicConfig->getConfigInfo(['name'=>'min_withdraw_limit'],'value');
         $min_withdraw_limit = $min_withdraw_limit['value'];
         $max_withdraw_limit = $max_withdraw_limit['value'];
-        if ($data['amount'] < $min_withdraw_limit) {
-            return ['code' => CodeEnum::ERROR, 'msg' => '最小提现金额为' . $min_withdraw_limit . '你的体现金额为:' . $data['amount']];
+        if($data['amount'] < $min_withdraw_limit ){
+            return ['code' => CodeEnum::ERROR, 'msg' => '最小提现金额为'.$min_withdraw_limit.'你的体现金额为:'.$data['amount']];
         }
-        if ($data['amount'] > $max_withdraw_limit) {
-            return ['code' => CodeEnum::ERROR, 'msg' => '最大提现金额为:' . $max_withdraw_limit];
+        if($data['amount'] > $max_withdraw_limit ){
+            return ['code' => CodeEnum::ERROR, 'msg' =>  '最大提现金额为:'.$max_withdraw_limit];
         }
 
         //提现手续费
 //        $commission =config('custom.fee');
-        if ($data['type'] == 0)
-        {
-            $withdraw_fee  =  $this->logicConfig->getConfigInfo(['name'=>'withdraw_fee'],'value');
-            $commission =  $withdraw_fee['value'];
-        }else
-        {
-            $withdraw_fee  =  $this->logicConfig->getConfigInfo(['name'=>'withdraw_usdt_rate'],'value');
-
-            $commission =bcdiv(bcmul($withdraw_fee['value'],$data['amount']),100,2);
-        }
+        $withdraw_fee  =  $this->logicConfig->getConfigInfo(['name'=>'withdraw_fee'],'value');
+        $commission =  $withdraw_fee['value'];
 
         //提现超额判断
         $balance = $this->modelBalance->getColumn(['uid'=>$data['uid']],'enable')[0];
@@ -276,8 +258,6 @@ class BalanceCash extends BaseLogic
         try{
             $data['cash_no'] = create_order_no();
             $data['commission'] = $commission;
-            unset($data['withdraw_usdt_rate']);
-
             //提现
             $this->modelBalanceCash->setInfo($data);
             //资金变动 - 资金记录

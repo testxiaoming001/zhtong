@@ -626,8 +626,6 @@ ADD COLUMN `type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '提现方式  0:银行�
 ----usdt提款手续费
 INSERT INTO `cm_config`(`name`, `title`, `type`, `sort`, `group`, `value`, `extra`, `describe`, `status`, `create_time`, `update_time`) VALUES ('withdraw_usdt_rate', 'ustd下发手续费', 1, 6, 0, '2.5', '', '', 1, 0, 0);
 
-
-
 ------新增usdt的提款地址
 ALTER TABLE `cm_balance_cash`
 ADD COLUMN `withdraw_usdt_address` varchar(255) NOT NULL DEFAULT '' COMMENT 'usdt提款地址' AFTER `type`

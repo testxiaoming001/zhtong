@@ -214,6 +214,8 @@ class Balance extends Base
 //                }
 //            }
             //校验令牌
+
+            
             $token = input('__token__');
             if (session('__token__') != $token) {
                 $this->result(0, '请不要重复发起提现,请刷新页面重试 ！！！');

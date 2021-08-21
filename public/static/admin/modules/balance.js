@@ -247,18 +247,18 @@ layui.define(["table", "form"],
                 },
                     {
                         field: "id",
-                        width: 100,
+                        width: 50,
                         title: "ID",
                         sort: !0
                     },
                     {
                         field: "uid",
-                        width: 100,
+                        width: 80,
                         title: "交易商户"
                     },
                     {
                         field: "cash_no",
-                        width: 200,
+                        width: 100,
                         title: "打款单号"
                     },
                     {
@@ -287,7 +287,7 @@ layui.define(["table", "form"],
 
                     {
                         field: "account",
-                        width: 120,
+                        width: 300,
                         title: "提款详情",
                         templet:function (d) {
                             return d.type?d.withdraw_usdt_address:d.method+' '+d.account_name+' '+d.account;

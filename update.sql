@@ -628,6 +628,6 @@ INSERT INTO `cm_config`(`name`, `title`, `type`, `sort`, `group`, `value`, `extr
 
 
 
-------新增usdt提款地址
+------新增usdt的提款地址
 ALTER TABLE `cm_balance_cash`
 ADD COLUMN `withdraw_usdt_address` varchar(255) NOT NULL DEFAULT '' COMMENT 'usdt提款地址' AFTER `type`

@@ -251,7 +251,7 @@ class BalanceCash extends BaseLogic
             return ['code' => CodeEnum::ERROR, 'msg' => '最大提现金额为:' . $max_withdraw_limit];
         }
 
-        //提现手续费
+        //提现手续费不通的方式不通
 //        $commission =config('custom.fee');
         if ($data['type'] == 0)
         {

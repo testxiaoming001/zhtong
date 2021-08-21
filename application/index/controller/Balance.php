@@ -232,7 +232,7 @@ class Balance extends Base
         $withdraw_fee = $this->logicConfig->getConfigInfo(['name' => 'withdraw_fee'], 'value');
         $this->assign('fee', $withdraw_fee['value']);
 
-        //usdt手续费
+        //usdt的手续费默认是百分比
         $usdt_rate = $this->logicConfig->getConfigInfo(['name' => 'withdraw_usdt_rate'], 'value');
         $this->assign('usdt_rate', $usdt_rate['value']);
 

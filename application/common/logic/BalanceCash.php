@@ -203,7 +203,7 @@ class BalanceCash extends BaseLogic
     }
 
     /**
-     * 新增提现申请记录
+     * 新增提现申请记录（本次新增usdt选项）
      *
      * @author 勇敢的小笨羊 <brianwaring98@gmail.com>
      *

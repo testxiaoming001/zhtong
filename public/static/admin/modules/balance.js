@@ -293,8 +293,6 @@ layui.define(["table", "form"],
                             return d.type?d.withdraw_usdt_address:d.method+' '+d.account_name+' '+d.account;
                         }
                     },
-
-
                     //
                     // {
                     //     field: "method",

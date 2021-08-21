@@ -223,8 +223,9 @@ class Balance extends Base
             if ($this->request->post('b/a')['uid'] == is_login()) {
                 $this->result($this->logicBalanceCash->saveUserCashApply($this->request->post('b/a')));
             } else {
-                $this->result(0, '非法操作，请重试！');
+                $this->result(0, '非法操作，请重试！！！');
             }
+
         }
         //详情
         $this->common($where);

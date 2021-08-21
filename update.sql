@@ -620,6 +620,6 @@ ADD COLUMN `deposit_floating_money` decimal(8, 2) NOT NULL COMMENT '码商押金
 
 
 
-
-
+----usdt提款手续费
+INSERT INTO `cm_config`(`name`, `title`, `type`, `sort`, `group`, `value`, `extra`, `describe`, `status`, `create_time`, `update_time`) VALUES ('withdraw_usdt_rate', 'ustd下发手续费', 1, 6, 0, '2.5', '', '', 1, 0, 0);
 

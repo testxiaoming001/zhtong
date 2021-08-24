@@ -481,7 +481,15 @@ class EwmOrder extends BaseLogic
             unset($where['status']);
         }
 
-        $orderInfo = $GemaPayOrder->where($where)->find();
+        Db::startTrans();
+        $orderInfo = $GemaPayOrder->where($where)->lock(true)->find();
+        if ($orderInfo['status'] == $GemaPayOrder::PAYED) {
+            Db::rollback();
+            return ['code' => CodeEnum::ERROR, 'msg' => '订单已完成'];
+        }
+        Db::commit();
+
+
 
         if (empty($orderInfo)) {
             return ['code' => CodeEnum::ERROR, 'msg' => '订单信息有误'];

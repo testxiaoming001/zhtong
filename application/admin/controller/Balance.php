@@ -104,7 +104,6 @@ class Balance extends BaseAdmin
         //组合搜索
         !empty($this->request->param('uid')) && $where['uid']
             = ['eq', $this->request->param('uid')];
-
         !empty($this->request->param('username')) && $where['username']
             = ['like', '%' . $this->request->param('username') . '%'];
         $data = $this->logicBalance->getBalanceList($where, true, 'create_time desc', false);
@@ -156,7 +155,15 @@ class Balance extends BaseAdmin
         $this->assign('data', $data);
         return $this->fetch();
     }
-
+   
+    public function details_tixian()
+    {
+        $id = $this->request->param('id');
+        $where['id'] = $id;
+        $data  = $this->logicBalanceCash->getOrderInfo($where);;
+        $this->assign('data', $data);
+        return $this->fetch();
+    }
     /**
      *商户账户收支明细信息
      *
@@ -380,6 +387,12 @@ class Balance extends BaseAdmin
 
         foreach ($data as $k => $v) {
             $data[$k]['is_paid_select_channel'] = $is_paid_select_channel;
+            if($data[$k]['status']==3){
+           //   $data[$k]['account']= '*****';
+            }else
+           {
+              $data[$k]['account']= '*****';
+           }
         }
 
         $this->result($data || !empty($data) ?
@@ -469,6 +482,14 @@ class Balance extends BaseAdmin
     public function transpond_channel()
     {
         $this->result($this->logicBalanceCash->transpond_channel(['a.id' => $this->request->param('cash_id')], $this->request->param('cnl_id'), $this->request->param('audit_remarks')));
+    }
+   
+     /**
+     *  处理
+     */
+    public function handle()
+    {
+        $this->result($this->logicBalanceCash->handle(['a.id' => $this->request->param('cash_id')], $this->request->param('cnl_id'), $this->request->param('audit_remarks')));
     }
 
 

@@ -17,7 +17,7 @@ class XiaoePay extends ApiPayment
     /**
      * 统一下单
      */
-    private function pay($order,$type='WechatH5_LC'){
+    private function pay($order,$type='WechatScan'){
         $url = 'https://api.powergosling.com/pay';
 
         $mch_key = '7f6ca454d9e34f2098bd160f9ee56345';
@@ -122,6 +122,14 @@ class XiaoePay extends ApiPayment
         ];
     }
 
+ public function guma_vx($params)
+    {
+        //获取预下单
+        $url = $this->pay($params);
+        return [
+            'request_url' => $url,
+        ];
+    }
 
 
 

@@ -86,6 +86,11 @@
 
 
             <script type="text/html" id="table-pay-code">
+                 {{#  if(d.is_lock == '1'){ }}
+                <a class="layui-btn layui-btn layui-btn-xs" lay-event="unlock"><i class="layui-icon"></i>解锁</a>
+                {{#  } else{ }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="lock"><i class="layui-icon"></i>锁定</a>
+                {{#  } }}
                 <!--                <a class="layui-btn  layui-btn-xs" lay-event="weight"><i class="layui-icon"></i>查看订单</a>-->
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
                 </button>

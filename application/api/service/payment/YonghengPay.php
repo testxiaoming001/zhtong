@@ -22,7 +22,7 @@ class YonghengPay extends ApiPayment
     {
 
 
-        $url = 'http://www.yingqianpay.com/zz.php';
+        $url = 'http://43.129.184.167:3020/api/pay/create_order';
         $merkey = '6Y8EQXFRKESY8MYISX8ZJRZNIGWXNRGYV8DRNK8RMBTQ1VFGQ8V9IMXZWXFC8WONYAZOIOQ1EHDHWQLHRYNUKHXNXSZRCQXLQMSP8CMVSRTPBOHZ4R7ZPTRGEJ2HKJHQ';
 
         $data = [
@@ -32,7 +32,7 @@ class YonghengPay extends ApiPayment
             'mchOrderNo' => $order['trade_no'],
             'currency' => 'cny',
             'amount' => sprintf("%.2f", $order["amount"]) * 100,
-            'notifyUrl' => 'http://www.yingqianpay.com/hd.php',
+            'notifyUrl' => 'http://www.zhongtongzhifu.com/api/notify/notify/channel/YonghengPay',
             'subject' => 'goods',
             'body' => 'goods',
             'extra' => '{"payMethod":"urlJump"}',

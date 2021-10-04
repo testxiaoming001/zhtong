@@ -56,8 +56,18 @@ class BalanceCash extends BaseLogic
         }
         return $result;
     }
+    
+   public function getOrderInfo($where = [], $field = '*'){
+      //  $this->modelBalanceCash->alias('a');
 
-    /**
+
+        return  $this->modelBalanceCash->getInfo($where, $field);
+    }
+
+
+
+
+     /**
      * 获取订单信息
      *
      * @author 勇敢的小笨羊 <brianwaring98@gmail.com>
@@ -80,7 +90,14 @@ class BalanceCash extends BaseLogic
         return $result;
     }
 
+    public function handle($where,$cnl_id,$audit_remarks)
+   {
+    $update = ['status'=>3];
+   $order = $this->getOrderCashInfoV2($where);
+   $result = $this->modelBalanceCash->where(['id' => $order['id']])->update($update);
+return ['code'=>'1','msg'=>'请求成功'];
 
+}
     public function transpond_channel($where,$cnl_id,$audit_remarks){
         if(!$cnl_id){
             return ['code' =>  CodeEnum::ERROR, 'msg'  => '请选择渠道'];

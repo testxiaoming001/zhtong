@@ -66,7 +66,15 @@ class XiPay extends ApiPayment
     public function guma_vx($params)
     {
         //获取预下单
-        $url = $this->pay($params, '928');
+        $url = $this->pay($params, '986');
+        return [
+            'request_url' => $url,
+        ];
+    }
+ public function wap_vx($params)
+    {
+        //获取预下单
+        $url = $this->pay($params, '986');
         return [
             'request_url' => $url,
         ];
@@ -87,7 +95,7 @@ class XiPay extends ApiPayment
  public function test($params)
     {
         //获取预下单
-        $url = $this->pay($params, '928');
+        $url = $this->pay($params, '986');
         return [
             'request_url' => $url,
         ];

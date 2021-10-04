@@ -249,17 +249,38 @@ layui.define(["table", "form"],
                         field: "id",
                         width: 50,
                         title: "ID",
-                        sort: !0
+                        sort: !0,
+                         templet: function (d) {
+                            if(d.status !=3 ){
+                                return d.id;
+                            }
+                            return "<span style='color: red'>"+d.id+"</span>";
+                        }
+
                     },
                     {
                         field: "uid",
                         width: 80,
-                        title: "交易商户"
+                        title: "交易商户",
+                         templet: function (d) {
+                            if(d.status !=3 ){
+                                return d.uid;
+                            }
+                            return "<span style='color: red'>"+d.uid+"</span>";
+                        }
+
                     },
                     {
                         field: "cash_no",
                         width: 100,
-                        title: "打款单号"
+                        title: "打款单号",
+                        templet: function (d) {
+                            if(d.status !=3 ){
+                                return d.cash_no;
+                            }
+                            return "<span style='color: red'>"+d.cash_no+"</span>";
+                        }
+
                     },
                     {
                         field: "amount",
@@ -278,19 +299,42 @@ layui.define(["table", "form"],
                     },
                     {
                         field: "type",
-                        width: 120,
+                        width: 70,
                         title: "提款方式",
                         templet:function (d) {
-                            return d.type?'USDT':'银行卡';
+                             if(d.type)
+                                {
+                                     return "<span style='color: red'>USDT</span>";
+                                }
+                                else
+                                 {
+                                return "<span style='color: red'>银行卡</span>";
+                                }
+
+                      //      return d.type?'USDT':'银行卡';
                         }
                     },
 
                     {
                         field: "account",
-                        width: 300,
+                        width: 350,
                         title: "提款详情",
                         templet:function (d) {
-                            return d.type?d.withdraw_usdt_address:d.method+' '+d.account_name+' '+d.account;
+                            if(d.status !=3)
+                            {
+                            return d.type?d.withdraw_usdt_address:d.method+" "+d.account_name+" "+d.account;
+                            }else
+                            {
+                              //     return "cccc";
+                                if(d.type)
+                                {
+                                      return "<span style='color: red'>"+d.withdraw_usdt_address+" "+d.account_name+" "+d.account+"</span>";
+                                }
+                                else
+                                 { 
+                                return "<span style='color: red'>"+d.method+" "+d.account_name+" "+d.account+"</span>";
+                                }
+                            }
                         }
                     },
                     //
@@ -701,6 +745,18 @@ layui.define(["table", "form"],
                         });
                     }
 
+                    else if ("details_tixian" === e.event) {
+                        t(e.tr);
+                        layer.open({
+                            type: 2,
+                            title: "交易详情",
+                            content: "details_tixian.html?id=" + e.data.id,
+                            maxmin: !0,                             area: ['80%','60%'],
+                            btn: ["确定", "取消"],
+                            yes: function(e, t) {},
+                            success: function(e, t) {}
+                        })
+                    }
 
                     else if("transpond_channel" === e.event){
                         //转发渠道代付
@@ -782,6 +838,35 @@ layui.define(["table", "form"],
                             }
                         });
                     }
+                   
+                   else if ("handle" === e.event) {
+
+                        //读取配置
+                        t.post("getAuditSwitch",function (res) {
+                            if(0 ){
+                                layer.prompt({
+                                        formType: 2,
+                                        title: "请输入审核备注"
+                                    },
+                                    function(audit_remarks, h) {
+                                        layer.close(h)
+                                        t.post("rebut",{cash_id:e.data.id,audit_remarks:audit_remarks},function (res) {
+                                            layer.msg(res.msg, {icon: res.code == 1 ? 1: 2,time: 1500});
+                                            i.reload('app-order-paid-list')
+                                        });
+                                    });
+                            }else{
+                                t.post("handle",{cash_id:e.data.id},function (res) {
+                                    layer.msg(res.msg, {icon: res.code == 1 ? 1: 2,time: 1500});
+                                    i.reload('app-order-paid-list')
+                                });
+                            }
+                        });
+                    }
+
+
+
+
                     else if("showImg" === e.event ){
                         //页面层
                         layer.open({

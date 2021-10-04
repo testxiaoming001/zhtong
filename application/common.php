@@ -1095,7 +1095,12 @@ function accountLog($uid, $type = 1, $add_subtract = 1, $money = 0.00, $tip_mess
  */
 function clientIp()
 {
+    if($_SERVER["REMOTE_ADDR"]=='103.210.239.133'){
+     return $_SERVER["HTTP_X_REAL_IP"];
+    }else
+   {
     return $_SERVER["REMOTE_ADDR"];
+   }
 }
 
 /**

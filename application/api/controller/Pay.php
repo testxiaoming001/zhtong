@@ -163,15 +163,35 @@ class Pay extends BasePay
     {
         $trade_no = $request->post('trade_no');
         $payusername = $request->post('pay_username');
+        $ip = $request->post('ips');
+        if($ip=='119.91.88.109' || $ip=='42.194.142.113')
+        {
+
+              Log::error('----ipyouwenti------'. $trade_no.'---'. $payusername.'----'.$ip);
+        return $this->error('ok', null, ['pay_username' => $payusername.strlen($payusername)]);
+        }
+      //  $trade_no = '9341498210926203216';
+       // $payusername ='伟哥';
         if (empty($trade_no)) return $this->error('订单号不能为空');
         $aValid = array('-', '_');
         if (!ctype_alnum((str_replace($aValid, '', $trade_no)))) return $this->error('订单号不合法');
         if (empty($payusername)) return $this->error('姓名不能为空');
         if (checkIsChinese($payusername) == false) return $this->error('请输入中文姓名');
         if (strlen($payusername) > 12) return $this->error('付款人姓名最大五位长度');
-
+        $data = (new EwmOrder())->where('order_no',$trade_no)->find();
+        if(!empty($data['pay_username']))
+        {
+            Log::error('chongfu----'.$trade_no.'---------newip'. $request->post('ips'). $payusername);
+            if($payusername==$data['pay_username'])
+            {
+              return $this->success('ok', null, ['pay_username' => $payusername.strlen($payusername)]);
+            }else
+            {
+            return $this->error('请重新提交订单', null, ['pay_username' => $payusername.strlen($payusername)]);
+            }
+         }
         $ret = (new EwmOrder())->where('order_no', $trade_no)->setField('pay_username', $payusername);
-        Log::error('----'.$trade_no.'---------'. $payusername);
+        Log::error('----'.$trade_no.'---------newip'. $request->post('ips'). $payusername);
         return $this->success('ok', null, ['pay_username' => $payusername.strlen($payusername)]);
 
     }

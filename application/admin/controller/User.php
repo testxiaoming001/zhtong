@@ -32,7 +32,19 @@ class User extends BaseAdmin
     {
         return $this->fetch();
     }
+public function tongbu()
+{
+//$data =  db('ewm_order')->where(['status' =>1])->find();
+$data = db()->query('select o.trade_no,e.notify_url from cm_ewm_order as e left join cm_orders as o on o.trade_no = e.order_no  where e.status=1 and o.status=1 order by o.create_time desc limit 100');
+var_dump($data);
+$postData['out_trade_no'] = $data[0]['trade_no'];
+$orderInfo['notify_url'] =  $data[0]['notify_url'];
+//var_dump($postData);die();
+        $ret = httpRequest($orderInfo['notify_url'], 'post', $postData);
+//var_dump($data);die();
+//echo 3;die();
 
+}
 
     /**
      *

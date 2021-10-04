@@ -31,6 +31,7 @@
                                 <option {$Request.get.status == '0' ? 'selected' : '' } value="0">驳回</option>
                                 <option {$Request.get.status == '1' ? 'selected' : '' } value="1">等待中</option>
                                 <option {$Request.get.status == '2' ? 'selected' : '' } value="2">已打款</option>
+                                <option {$Request.get.status == '3' ? 'selected' : '' } value="3">处理中</option>
                             </select>
                         </div>
                     </div>
@@ -74,7 +75,7 @@
                 {{#  } else if(d.status == '1'){ }}
                 <button class="layui-btn layui-btn-warm layui-btn-xs">等待中</button>
                 {{#  } else if(d.status == '3'){ }}
-                <button class="layui-btn layui-btn-warm layui-btn-xs">已转发渠道</button>
+                <button class="layui-btn layui-btn-warm layui-btn-xs">处理中</button>
                 {{#  } else if(d.status == '4'){ }}
                 <button class="layui-btn layui-btn-warm layui-btn-xs">跑分已处理</button>
                 {{#  } else { }}
@@ -90,14 +91,18 @@
             <script type="text/html" id="table-balance-tool">
                 {{#  if(d.status == '1'){ }}
                 <!--<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="transpond"><i class="layui-icon layui-icon-auz"></i>转发跑分</a>-->
-                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="transpond_channel"><i class="layui-icon layui-icon-auz"></i>转发渠道代付</a>
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="deal"><i class="layui-icon layui-icon-auz"></i>审核</a>
+               <!-- <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="transpond_channel"><i class="layui-icon layui-icon-auz"></i>转发渠道代付</a>-->
+                <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="handle"><i class="layui-icon layui-icon-auz"></i>处理</a>
+            <!--    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="deal"><i class="layui-icon layui-icon-auz"></i>审核</a>-->
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="rebut"><i class="layui-icon layui-icon-delete"></i>驳回</a>
                 {{#  } else if(d.status == '4'){ }}
                 <!--<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="successOrder"><i class="layui-icon layui-icon-delete"></i>确认订单</a>-->
                 {{#  } else if(d.status == '3'){ }}
+                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="deal"><i class="layui-icon layui-icon-auz"></i>审核</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="rebut"><i class="layui-icon layui-icon-delete"></i>驳回</a>
                 <!--<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="revocation"><i class="layui-icon layui-icon-delete"></i>撤回</a>-->
                 {{#  } else { }}
+               <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="details_tixian"><i class="layui-icon layui-icon-auz"></i>详情</a>
                 <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-auz"></i>审核</a>
                 <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>驳回</a>
                 {{#  } }}

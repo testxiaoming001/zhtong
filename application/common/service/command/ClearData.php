@@ -69,9 +69,9 @@ class ClearData extends Command
             }
             //删除码商相关的数据
             //①码商订单
-            db('ewm_order')->where(['add_time' => ['lt', time() - 86400 * 7]])->delete();
+            db('ewm_order')->where(['add_time' => ['lt', time() - 86400 * 10]])->delete();
             //②码商流水
-            db('ms_somebill')->where(['addtime' => ['lt', time() - 86400 * 7]])->delete();
+            db('ms_somebill')->where(['addtime' => ['lt', time() - 86400 * 10]])->delete();
 
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());

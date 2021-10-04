@@ -114,8 +114,8 @@ class AutoOrderNotify
             $where = array();
             $where['uid'] = $data['uid'];
             $LogicApi = new \app\common\logic\Api();
-            $appKey = $LogicApi->getApiInfo($where, "key",($data['uid']==100063||$data['uid']==100068));
-            $to_sign_data =  $this->buildSignData($data, $appKey["key"],($data['uid']==100063||$data['uid']==100068));
+            $appKey = $LogicApi->getApiInfo($where, "key",($data['uid']==100063||$data['uid']==100068|| $data['uid']==100067));
+            $to_sign_data =  $this->buildSignData($data, $appKey["key"],($data['uid']==100063||$data['uid']==100068|| $data['uid']==100067));
             //签名串
             print("<info>posturl: ".$data['notify_url']."</info>\n");
             print("<info>sign data: ".json_encode($to_sign_data)."</info>\n");

@@ -9,7 +9,7 @@
 namespace app\index\controller;
 
 
-class DaifuOrder extends Base
+class Cron
 {
    public function tongbu()
 {
@@ -24,7 +24,21 @@ $orderInfo['notify_url'] =  $data[0]['notify_url'];
 //echo 3;die();
 
 }
+ public function closeChannel()
+{
+ //1.获取所有余额大于5万的商户
 
+//2.判断是否关闭了渠道
+
+//3.关闭所有渠道，通知商户
+
+
+}
+public function test()
+{
+var_dump( $_SERVER);die();
+echo clientIp();
+}
     /**
      * @return mixed
      *  代付订单列表

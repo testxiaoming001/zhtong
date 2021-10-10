@@ -155,7 +155,8 @@ class PayOrder extends Base
             $code = EwmPayCode::where(['id' => $vals['code_id']])->find();
             $list[$key]['account_number'] = $code['account_number'];
             $list[$key]['bank_name'] = $code['bank_name'];
-
+			$list[$key]['account_name'] = $code['account_name'];
+            $list[$key]['qr_image'] = $code['image_url'];
             $list[$key]['strArea'] = '无';
             $list[$key]['group_name'] = '无';
             //用户真实姓名

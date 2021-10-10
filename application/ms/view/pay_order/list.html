@@ -109,7 +109,8 @@
                                     <td >{switch name="$data.code_type" }
                                         {case value="1" }<img src="__PUBLIC__/static/icon/t_1.png" width="40%"  style="margin-left: 20%" >{/case}
                                         {case value="2"}<img src="__PUBLIC__/static/icon/t_2.png" width="40%" style="margin-left: 20%" >{/case}
-                                        {case value="3"}<img src="__PUBLIC__/static/icon/t_3.png" width="40%" style="margin-left: 20%" >{/case}
+                                        {case value="3"}银行卡{/case}
+										 {case value="4"}微信群红包{/case}
                                         {default /}
                                         {/switch}
                                     </td>
@@ -130,13 +131,14 @@
                                     <!--</td>-->
                                     <!--<td>{php} echo  $data['s_type_name'];{/php}</td>-->
                                     <td >
-                                        收款帐号: <span style="font-size: 20px ;color: red" >{$data.account_number|default='---'} </span><br>
+									    {if  condition="$data['code_type']==4"}
+										 群名称:<span style="font-size: 20px ;color: red" >{$data.account_name|default='---'} </span><br>
+                                        <a style="font-size: 20px ;color: green" name="查看"  title="点击查看二维码" class="label-pill" href="/{$data.qr_image}">点击查看二维码</a>
+                                        {else/}
+										 收款帐号: <span style="font-size: 20px ;color: red" >{$data.account_number|default='---'} </span><br>
                                         收款银行: <span style="font-size: 20px ;color: red" >{$data.bank_name|default='---'} </span><br>
-                                        <!--二维码： {if  condition="$data['visite_time'] && $data['qr_image']"}-->
-                                        <!--<a name="查看"  onclick='openpic("{$data.qr_image}")' title="查看" class="label label-primary-outline label-pill" href="javascript:void(0)">查看</a>-->
-                                        <!--{else/}-->
                                         <!--<span style="color: red">访问</span>-->
-                                        <!--{/if}-->
+                                        {/if}
 
                                     </td>
 

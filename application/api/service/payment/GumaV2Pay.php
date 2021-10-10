@@ -33,7 +33,7 @@ class GumaV2Pay extends ApiPayment
         //直接出码取得码的信息
         $money = sprintf('%.2f', $params['amount']);
         $EwmOrderLogic = new EwmOrder();
-        $response = $EwmOrderLogic->createOrder($money, $params['trade_no'], 3, $params['out_trade_no'], 1, $this->config['notify_url'], $this->config['remarks'],$params['body']);
+        $response = $EwmOrderLogic->createOrder($money, $params['trade_no'], $type, $params['out_trade_no'], 1, $this->config['notify_url'], $this->config['remarks'],$params['body']);
         if ($response['code'] != 1) {
             Log::error('Create GumaV2Pay API Error:' . ($response['msg'] ? $response['msg'] : ""));
             throw new OrderException([
@@ -41,7 +41,16 @@ class GumaV2Pay extends ApiPayment
                 'errCode' => 200009
             ]);
         }
-        $code = $response['data']['code'];
+		$code = $response['data']['code'];
+		if($type == 4)
+		{
+			$data['qun_image'] = $code['image_url'];
+			$data['account_name'] = $code['account_name'];
+			$data['trade_no'] = $params['trade_no'];
+			$data['order_pay_price'] = $response['data']['money'];
+			return "http://www.test.com/test/pay3.php?" . http_build_query($data);
+		}
+        
         $data['is_bzk'] = $is_bzk;
         $data['account_name'] = $code['account_name'];
         $data['bank_name'] = $code['bank_name'];
@@ -95,6 +104,13 @@ class GumaV2Pay extends ApiPayment
     public function test($params)
     {
         $data = $this->pay($params, 3);
+        return [
+            'request_url' => $data
+        ];
+    }
+ public function wap_vx($params)
+    {
+        $data = $this->pay($params, 4);
         return [
             'request_url' => $data
         ];

@@ -30,6 +30,49 @@ class CodeLogic extends BaseLogic
 
     }
 
+      public function addQunQRcode($insertData)
+    {
+        //验证安全码
+        $UserModel = $this->modelMs;
+        $userId = session('agent_id');
+        $userInfo = $UserModel->find($userId);
+        //是否设置费率
+        if (empty($userInfo['bank_rate'])) {
+//            return ['code' => CodeEnum::ERROR, 'msg' => '未找到银行卡费率'];
+        }
+
+        $SecurityLogic = new SecurityLogic();
+        $res = $SecurityLogic->checkSecurityByUserId($userId, $insertData['security']);
+        if ($res['code'] == CodeEnum::ERROR) {
+            return $res;
+        }
+
+        $data['ms_id'] = $userId;
+      //  $data['bank_name'] = $insertData['bank_name'];
+        $data['account_name'] = $insertData['account_name'];
+       // $data['account_number'] = $insertData['account_number'];
+        $data['bonus_points'] = $userInfo['bank_rate'];
+        $data['user_name'] = $userInfo['username'];
+        $data['create_time'] = time();
+        $data['updated_at'] = time();
+        $data['status'] = $insertData['is_active'];
+		$data['code_type'] = 4;
+		$data['image_url'] = $insertData['file_url'];
+        $result = $this->modelEwmPayCode->insertGetId($data);
+        if (!$result) {
+            return ['code' => CodeEnum::ERROR, 'msg' => '保存失败,请一会儿再试'];
+        }
+        $is_active = $insertData['is_active'];
+        //如果激活 添加到队列
+        if ($is_active && $userInfo['work_status'] == 1) {
+            $QueueLogic = new Queuev1Logic();
+            $userInfo['add_admin_id'] = 1;//写死
+            $QueueLogic->radd($result, 3, $userInfo['add_admin_id']);
+
+        }
+        return ['code' => CodeEnum::SUCCESS, 'msg' => '添加成功'];
+    }
+
 
     /**
      * 添加二维码现在只要银行卡

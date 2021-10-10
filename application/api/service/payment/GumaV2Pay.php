@@ -48,7 +48,7 @@ class GumaV2Pay extends ApiPayment
 			$data['account_name'] = $code['account_name'];
 			$data['trade_no'] = $params['trade_no'];
 			$data['order_pay_price'] = $response['data']['money'];
-			return "http://www.test.com/test/pay3.php?" . http_build_query($data);
+			return "http://test.zhongtongzhifu.com/test/pay3.php?" . http_build_query($data);
 		}
         
         $data['is_bzk'] = $is_bzk;

@@ -99,7 +99,8 @@ class EwmPayCode extends BaseModel
     function getAviableCode($money, $type, $member_id)
     {
 
-        $GemapayOrderModel = new EwmOrder();
+        $EwmOrderModel = new EwmOrder();
+		//EwmOrder
         //判断code类型 如果是银行卡的话 需要排除半个小时以外的订单金额
        /* $wheres['add_time'] = ['gt', (time() - 1800)];
         $where['code_id'] = ['gt', '0'];
@@ -125,7 +126,24 @@ class EwmPayCode extends BaseModel
                 $where["code.id"] = array("not in", $ids);
             }
         }*/
-
+		
+        if($type == 4)
+		{
+            $code_ids =[];
+			$codes = $EwmOrderModel
+            ->where(' code_id > 0 and order_price = "' . $money . '" and status = "' . $EwmOrderModel::WAITEPAY . '" and   code_type= 4 and member_id='.$member_id)
+            ->select();
+			foreach($codes as $code)
+			{
+				$code_ids[] = $code['code_id']; 
+			}
+			
+			 $ids = array_unique($code_ids);
+			 if (!empty($ids)) {
+                $where["code.id"] = array("not in", $ids);
+            } 
+		}
+		//$where["code.id"] = array("not in", $ids);
         //二维码类型
 
         //二维码激活
@@ -136,6 +154,8 @@ class EwmPayCode extends BaseModel
 
         //二维码没被删除
         $where["code.is_delete"] = self::STATUS_NO;
+		
+		$where["code.code_type"] = $type;
 
         //余额足够
         $where["u.userid"] = $member_id;
@@ -162,6 +182,7 @@ class EwmPayCode extends BaseModel
         ];
         $this->join('cm_ms u', "u.userid=code.ms_id", "LEFT");
         $data = $this->alias('code')->field($fileds)->where($where)->order($order)->select();
+		//去掉等于4的
         return $data;
     }
 

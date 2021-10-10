@@ -628,4 +628,11 @@ INSERT INTO `cm_config`(`name`, `title`, `type`, `sort`, `group`, `value`, `extr
 
 ------新增usdt的提款地址
 ALTER TABLE `cm_balance_cash`
-ADD COLUMN `withdraw_usdt_address` varchar(255) NOT NULL DEFAULT '' COMMENT 'usdt提款地址' AFTER `type`
+ADD COLUMN `withdraw_usdt_address` varchar(255) NOT NULL DEFAULT '' COMMENT 'usdt提款地址' AFTER `type`;
+
+
+ALTER TABLE  `cm_ewm_pay_code`
+ADD COLUMN `code_type` tinyint(1) NOT NULL DEFAULT 0 COMMENT '二维码类型';
+
+ALTER TABLE `cm_ewm_pay_code`
+ADD COLUMN `image_url` varchar(520) NOT NULL COMMENT '图片地址';

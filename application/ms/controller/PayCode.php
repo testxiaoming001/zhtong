@@ -63,7 +63,43 @@ class PayCode extends Base
         return $this->fetch();
     }
 
+     public function qun_lists(Request $request)
+    {
+        $account_name = $request->param('account_name', '', 'trim');
+	if(strlen( $account_name<10)){
+	    $account_name && $map['a.account_name'] = ['like', '%' . $account_name . '%'];
+        }
+        $map = [];
+        $map['a.ms_id'] = $this->agent_id;
+        $map['a.is_delete'] = 0;
 
+        $gemapayCode = Db::name('ewm_pay_code');
+        $listGemaPayCode = $gemapayCode->alias('a')
+            ->field('*')
+            ->where($map)
+            ->order('id desc')
+            ->paginate(10);
+
+        $list = $listGemaPayCode->items();
+        $CodeLogic = new CodeLogic();
+
+        foreach ($list as $k => $v) {
+            $v['type'] = 1; //3是银行卡
+            $v['add_admin_id'] = 1;//目前就当是支付系统admin超级管理员
+            $position = $CodeLogic->getQueenPostion($v['id'], $v['type'], $v['add_admin_id']);
+            $list[$k]['queen_postion'] = $position;
+        }
+        $positions = array_column($list, 'queen_postion');
+        array_multisort($positions, SORT_ASC, SORT_REGULAR, $list);
+        $count = $listGemaPayCode->total();
+        // 获取分页显示
+        $page = $listGemaPayCode->render();
+        $this->assign('count', $count);
+        $this->assign('list', $list); // 賦值數據集
+        $this->assign('count', $count);
+        $this->assign('page', $page); // 賦值分頁輸出
+        return $this->fetch();
+    }
     /**
      * 银行卡
      * @var string[]
@@ -120,7 +156,69 @@ class PayCode extends Base
         return $this->fetch();
     }
 
-
+     /**
+     * 添加群二维码
+     */
+    public function qun_add(CodeLogic $codeLogic)
+    {
+        if ($this->request->isPost()) {
+			
+			if (( ($_FILES["file"]["type"] == "image/jpeg")
+                || ($_FILES["file"]["type"] == "image/pjpeg")
+                || ($_FILES["file"]["type"] == "image/png"))
+            && ($_FILES["file"]["size"] < 2000000))
+        {
+            if ($_FILES["file"]["error"] > 0)
+            {
+                $this->error("Return Code: " . $_FILES["file"]["error"],3);
+            }
+            else
+            {
+                if($_FILES["file"]["type"] == "image/jpeg"){
+                    $ext = '.jpg';
+                }
+                if($_FILES["file"]["type"] == "image/pjpeg"){
+                    $ext = '.jpg';
+                }
+                if($_FILES["file"]["type"] == "image/png"){
+                    $ext = '.png';
+                }
+                $name = md5(microtime()).$ext;
+                if (file_exists("public/uploads/" . $name))
+                {
+                    echo $_FILES["file"]["name"] . " already exists. ";
+                }
+                else
+                {
+                    move_uploaded_file($_FILES["file"]["tmp_name"],
+                        "public/uploads/" .$name);
+                  //  $this->success("Stored in: " . "upload/" . $_FILES["file"]["name"],'/ownpay/add',3);
+                }
+            }
+        }
+        else
+        {
+            $this->error('非法图片，请选择二维码图片','/ownpay/add',3);
+        }
+			
+			
+			
+			
+            $data = $this->request->param();
+           // $result = $this->validate($data, 'EwmPayCode');
+           // if (true !== $result) {
+             //   $this->error($result);
+           // }
+		    $data['file_url']= "public/uploads/" . $name;
+            $result = $codeLogic->addQunQRcode($data);
+            if ($result['code'] = CodeEnum::ERROR) {
+                $this->error("上传失败," . $result['msg']);
+            }
+            $this->success($result['msg'], url('qun_lists'));
+        }
+        $this->assign('banksList', $this->banks);
+        return $this->fetch();
+    }
     /**
      * 删除二维码
      * @param Request $request

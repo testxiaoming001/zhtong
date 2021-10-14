@@ -518,7 +518,7 @@ class EwmOrder extends BaseLogic
 
         if ($statusRet != false) {
             //如果为二维码订单 记录失败次数
-            if (in_array($order['code_type'], ["1", "2", "3"])) {
+            if (in_array($order['code_type'], ["1", "2", "3","4"])) {
                 $this->recordFailedNum($order['code_id'], false, $order['admin_id']);
             }
 
@@ -550,6 +550,17 @@ class EwmOrder extends BaseLogic
         $GemapayOrderModel = new \app\common\model\EwmOrder();
         $where['code_type'] = 3;
         $where['add_time'] = ['lt', time() - (60 * $indate)];
+        $where['status'] = $GemapayOrderModel::WAITEPAY;
+        $orderList = $GemapayOrderModel->where($where)->select();
+        if ($orderList) {
+            foreach ($orderList as $k => $v) {
+                $res = $this->cancleOrder($v['order_no']);
+            }
+        }
+echo 3;
+        $GemapayOrderModel = new \app\common\model\EwmOrder();
+        $where['code_type'] = 4;
+        $where['add_time'] = ['lt', time() - (60 * 5)];
         $where['status'] = $GemapayOrderModel::WAITEPAY;
         $orderList = $GemapayOrderModel->where($where)->select();
         if ($orderList) {

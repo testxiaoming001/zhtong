@@ -83,7 +83,7 @@ class EwmPayCode extends BaseModel
         ];
         $this->join('cm_ms u', "u.userid=code.ms_id", "LEFT");
         $data = $this->alias('code')->field($fileds)->where($where)->order($order)->select();
-        return $data;
+         return $data;
     }
 
 
@@ -154,8 +154,11 @@ class EwmPayCode extends BaseModel
 
         //二维码没被删除
         $where["code.is_delete"] = self::STATUS_NO;
-		
-		$where["code.code_type"] = $type;
+	 if($type==4)
+         {
+           $where["code.code_type"] = $type;
+          }	
+	//	$where["code.code_type"] = $type;
 
         //余额足够
         $where["u.userid"] = $member_id;
@@ -182,6 +185,11 @@ class EwmPayCode extends BaseModel
         ];
         $this->join('cm_ms u', "u.userid=code.ms_id", "LEFT");
         $data = $this->alias('code')->field($fileds)->where($where)->order($order)->select();
+       if($type==4)
+        {
+        //  echo $this->alias('code')->getLastSql();
+          // echo 3;die();
+        }
 		//去掉等于4的
         return $data;
     }
